@@ -1,0 +1,115 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Create Virtual Environment",
+      "type": "shell",
+      "command": "python -m venv .venv",
+      "windows": {
+        "command": "python -m venv .venv"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Install Dependencies",
+      "type": "shell",
+      "command": ".venv/bin/pip install -r requirements.txt",
+      "windows": {
+        "command": ".venv\\Scripts\\pip install -r requirements.txt"
+      },
+      "dependsOn": ["Create Virtual Environment"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Flask Server",
+      "type": "shell",
+      "command": ".venv/bin/python app.py",
+      "windows": {
+        "command": ".venv\\Scripts\\python app.py"
+      },
+      "dependsOn": ["Install Dependencies"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "flask",
+        "pattern": [
+          {
+            "regexp": "^(.*)$",
+            "message": 1
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Running on http.*$",
+          "endsPattern": "^.*Running on http.*$"
+        }
+      }
+    },
+    {
+      "label": "Generate Sample Data",
+      "type": "shell",
+      "command": ".venv/bin/python -c \"import pandas as pd, numpy as np; np.random.seed(42); n=200; df=pd.DataFrame({'CustomerID': range(1, n+1), 'Age': np.random.randint(18, 70, n), 'Annual_Income': np.random.randint(20000, 150000, n), 'Spending_Score': np.random.randint(1, 100, n), 'Purchase_Frequency': np.random.randint(1, 50, n)}); df.to_csv('sample_customers.csv', index=False); print('sample_customers.csv generated.')\"",
+      "windows": {
+        "command": ".venv\\Scripts\\python -c \"import pandas as pd, numpy as np; np.random.seed(42); n=200; df=pd.DataFrame({'CustomerID': range(1, n+1), 'Age': np.random.randint(18, 70, n), 'Annual_Income': np.random.randint(20000, 150000, n), 'Spending_Score': np.random.randint(1, 100, n), 'Purchase_Frequency': np.random.randint(1, 50, n)}); df.to_csv('sample_customers.csv', index=False); print('sample_customers.csv generated.')\""
+      },
+      "dependsOn": ["Install Dependencies"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run All (Setup + Start)",
+      "dependsOn": ["Generate Sample Data", "Start Flask Server"],
+      "dependsOrder": "sequence",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}
